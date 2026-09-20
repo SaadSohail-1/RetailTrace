@@ -1,138 +1,184 @@
 # Blockchain-as-a-Service Platform for E-Commerce
 
-## 1. Project Overview
+## 1. Overview
 
-This project proposes a Blockchain-as-a-Service (BaaS) platform that enables existing Web2 e-commerce businesses to integrate blockchain-based functionality through simple REST APIs.
+### 1.1 Project Description
 
-The platform acts as an abstraction layer between conventional e-commerce applications and blockchain infrastructure. Businesses using the platform do not need to develop Solidity smart contracts, operate blockchain nodes, manage blockchain infrastructure, or directly interact with blockchain networks.
+The project is a **Blockchain-as-a-Service (BaaS) platform** that enables existing Web2 e-commerce businesses to integrate blockchain-based functionality through simple REST APIs.
 
-The BaaS platform handles these blockchain operations internally and exposes application-level APIs to its business clients.
+The platform acts as an abstraction layer between Web2 applications and the underlying blockchain network. Businesses do not need to manage blockchain infrastructure, blockchain nodes, blockchain data structures, or blockchain-specific APIs themselves.
 
-### Core concept
-
-```text
-Existing Web2 E-Commerce Application
-                |
-                | REST API
-                v
-        BaaS Platform
-                |
-                | Blockchain integration
-                v
-        Smart Contracts
-                |
-                v
-        Blockchain Network
-```
-
-The primary goal is to demonstrate how existing Web2 businesses can adopt selected Web3 capabilities without requiring direct knowledge of blockchain technologies.
-
----
-
-# 2. Problem Statement
-
-Traditional e-commerce businesses may benefit from blockchain-based capabilities such as:
-
-* Product authenticity verification
-* Tamper-resistant ownership records
-* Warranty history
-* Supply-chain traceability
-* Verifiable product lifecycle events
-
-However, implementing these capabilities independently requires knowledge of blockchain networks, smart contracts, transaction management, blockchain accounts, and supporting infrastructure.
-
-This creates a technical barrier for businesses whose existing systems are based on conventional Web2 technologies.
-
-The proposed platform addresses this problem by providing blockchain functionality through familiar REST APIs.
-
-Instead of directly interacting with a blockchain, a business can make requests such as:
-
-```http
-POST /api/products/register
-GET /api/products/{productId}/verify
-POST /api/products/{productId}/transfer
-POST /api/products/{productId}/warranty
-POST /api/products/{productId}/events
-```
-
-The BaaS platform handles the underlying blockchain interaction.
-
----
-
-# 3. Project Objectives
-
-The project aims to:
-
-1. Design a BaaS architecture connecting Web2 e-commerce applications with blockchain infrastructure.
-2. Provide blockchain functionality through REST APIs.
-3. Implement smart contracts for selected e-commerce use cases.
-4. Demonstrate communication between a Node.js backend and blockchain smart contracts.
-5. Maintain appropriate separation between on-chain and off-chain data.
-6. Provide a web-based dashboard for demonstrating and managing the platform.
-7. Demonstrate blockchain transactions using a local development blockchain without involving real cryptocurrency.
-8. Provide transaction status and transaction hashes to API consumers.
-9. Demonstrate how blockchain complexity can be hidden behind an application-level API.
-
----
-
-# 4. Target Users
-
-## 4.1 E-Commerce Business
-
-The primary user of the BaaS platform is an existing e-commerce business.
-
-The business interacts with the platform through REST APIs rather than directly interacting with the blockchain.
-
-Examples include:
+The BaaS platform provides services such as:
 
 * Product registration
 * Product verification
 * Ownership transfer
-* Warranty recording
-* Supply-chain event recording
+* Warranty records
+* Supply-chain event tracking
 
-## 4.2 Platform Administrator
+The underlying blockchain infrastructure will use **MultiChain**, a permissioned blockchain platform. MultiChain data streams will be used to maintain append-only, timestamped blockchain records, while MultiChain permissions will control which participating businesses can perform specific operations.
 
-The platform administrator manages the BaaS platform and may monitor:
+### 1.2 Problem Statement
 
-* Registered businesses
-* Registered products
-* Blockchain transactions
-* Transaction status
-* Blockchain-related errors
-* Platform activity
+Existing Web2 e-commerce businesses may benefit from blockchain-based product authenticity, ownership, warranty, and supply-chain tracking, but integrating blockchain directly requires knowledge of blockchain infrastructure, node management, transaction handling, and blockchain-specific APIs.
+
+The proposed system addresses this problem by providing a simple REST API through which businesses can access blockchain-backed services without directly interacting with the underlying MultiChain network.
+
+### 1.3 Main Objective
+
+The main objective is to develop a working BaaS prototype that demonstrates how an existing Web2 e-commerce application can consume blockchain functionality through conventional REST APIs.
+
+The system should hide the complexity of MultiChain from the business application while maintaining blockchain-backed records for operations where shared, tamper-evident history is required.
 
 ---
 
-# 5. System Scope
+# 2. Target Users
 
-## 5.1 In Scope
+## 2.1 E-Commerce Businesses
 
-The MVP will provide the following blockchain-backed services.
+Existing Web2 businesses that want to integrate blockchain-backed services into their applications.
 
-### Product Registration
+Examples include:
 
-A business can register a product through the BaaS API.
+* Manufacturers
+* Retailers
+* Distributors
+* Warranty providers
+* Supply-chain participants
 
-The platform will:
+These businesses interact primarily with the BaaS REST API rather than directly with MultiChain.
 
-1. Validate the request.
-2. Store required application data off-chain.
-3. Submit a blockchain transaction.
-4. Record the resulting transaction hash.
-5. Return the transaction status to the API consumer.
+## 2.2 BaaS Administrator
+
+The platform administrator manages:
+
+* Registered businesses
+* API credentials
+* Business blockchain identities
+* Blockchain permissions
+* Platform configuration
+
+## 2.3 End Customers
+
+Customers are indirect users of the system.
+
+They do not interact directly with the blockchain. Instead, their e-commerce application can use the BaaS API to provide functionality such as:
+
+* Product authenticity verification
+* Ownership history
+* Warranty information
+* Supply-chain history
+
+---
+
+# 3. Project Scope
+
+## 3.1 In Scope
+
+The MVP will provide the following functionality:
+
+1. Business registration and authentication
+2. API-based access for Web2 businesses
+3. Product registration on the blockchain
+4. Product verification
+5. Ownership transfer
+6. Ownership history
+7. Warranty event recording
+8. Warranty history
+9. Supply-chain event recording
+10. Supply-chain history
+11. Blockchain transaction tracking
+12. MultiChain permission management
+13. PostgreSQL-based application data storage
+14. REST API abstraction over MultiChain
+15. Basic administrator functionality
+
+## 3.2 Out of Scope
+
+The following features are outside the MVP:
+
+* Cryptocurrency payments
+* Customer cryptocurrency wallets
+* Token-based payments
+* Cryptocurrency exchange
+* Public blockchain deployment
+* Consumer-facing crypto functionality
+* Building a new blockchain protocol
+* Custom consensus algorithm
+* Large-scale cloud deployment
+* Production-grade multi-region infrastructure
+* Advanced enterprise data privacy features
+* Full commercial BaaS billing/subscription system
+
+The project focuses on demonstrating the **BaaS concept and blockchain integration**, rather than building a production-scale commercial platform.
+
+---
+
+# 4. Functional Requirements
+
+## FR-01 — Business Registration
+
+The system shall allow an administrator to register a participating e-commerce business.
+
+A business record shall contain information such as:
+
+* Business ID
+* Business name
+* Contact information
+* API credentials
+* Blockchain identity/address
+* Registration timestamp
+
+Each participating business shall have an associated blockchain identity/address used when interacting with the MultiChain network.
+
+---
+
+## FR-02 — API Authentication
+
+The system shall authenticate businesses before allowing access to BaaS services.
+
+The API shall use API credentials to identify the requesting business.
+
+The backend shall associate each API request with a registered business and its corresponding permissions.
+
+---
+
+## FR-03 — Product Registration
+
+The system shall allow a registered business to register a product through the BaaS REST API.
 
 Example:
 
 ```http
-POST /api/products/register
+POST /api/products
 ```
+
+Example request:
+
+```json
+{
+  "productId": "P1001",
+  "name": "Product A",
+  "description": "Example product"
+}
+```
+
+The BaaS backend shall:
+
+1. Authenticate the business.
+2. Validate the request.
+3. Store application-level product information in PostgreSQL.
+4. Publish a blockchain record to the appropriate MultiChain stream.
+5. Store the resulting blockchain transaction ID.
+6. Return the blockchain operation status to the business.
+
+The blockchain record shall contain only the information necessary for blockchain-backed verification and history.
 
 ---
 
-### Product Verification
+## FR-04 — Product Verification
 
-A business can verify whether a product has been registered on the blockchain.
+The system shall allow a business to verify whether a product has a corresponding blockchain record.
 
 Example:
 
@@ -140,27 +186,68 @@ Example:
 GET /api/products/{productId}/verify
 ```
 
-The platform retrieves the relevant blockchain record and returns the verification result.
+The verification process shall query the relevant MultiChain stream rather than relying solely on the PostgreSQL database.
+
+The response shall indicate:
+
+* Product identifier
+* Blockchain record status
+* Blockchain transaction ID
+* Registration information
+* Verification result
+
+This demonstrates that verification is backed by the blockchain ledger rather than being simply a database lookup.
 
 ---
 
-### Ownership Transfer
+## FR-05 — Ownership Transfer
 
-The platform will support recording changes in product ownership.
+The system shall allow an authorized business to transfer ownership of a registered product.
 
 Example:
 
 ```http
-POST /api/products/{productId}/transfer
+POST /api/products/{productId}/ownership
 ```
 
-The blockchain will maintain the ownership state and relevant transfer history.
+Example request:
+
+```json
+{
+  "newOwner": "BUSINESS-002"
+}
+```
+
+The BaaS backend shall:
+
+1. Verify the requesting business.
+2. Verify that the business is authorized to perform the operation.
+3. Validate the product.
+4. Publish an ownership-transfer event to the MultiChain ownership stream.
+5. Store the transaction information in PostgreSQL.
+6. Return the resulting blockchain transaction ID and status.
+
+Ownership history shall remain available rather than being overwritten.
 
 ---
 
-### Warranty Records
+## FR-06 — Ownership History
 
-The platform will support recording warranty-related information associated with a product.
+The system shall allow authorized businesses to retrieve the ownership history of a product.
+
+Example:
+
+```http
+GET /api/products/{productId}/ownership/history
+```
+
+The response shall contain the chronological ownership-transfer events recorded for the product.
+
+---
+
+## FR-07 — Warranty Management
+
+The system shall allow an authorized business to record warranty-related events for a product.
 
 Example:
 
@@ -168,416 +255,526 @@ Example:
 POST /api/products/{productId}/warranty
 ```
 
-Important warranty records will be represented through blockchain transactions/events.
+Example request:
 
----
+```json
+{
+  "event": "WARRANTY_ACTIVATED",
+  "startDate": "2026-09-20",
+  "durationMonths": 12
+}
+```
 
-### Supply-Chain Events
+Warranty events shall be recorded in the appropriate MultiChain stream.
 
-The platform will allow businesses to record significant product lifecycle events.
-
-Examples include:
-
-* Manufactured
-* Shipped
-* Warehouse received
-* Distributed
-* Retailer received
+The system shall support retrieving the warranty history of a product.
 
 Example:
 
 ```http
-POST /api/products/{productId}/events
+GET /api/products/{productId}/warranty
 ```
-
-These events can provide a tamper-resistant product history.
 
 ---
 
-# 6. Blockchain Model
+## FR-08 — Supply-Chain Event Tracking
 
-The project will use an Ethereum-compatible blockchain architecture for the prototype.
+The system shall allow authorized participants to record supply-chain events.
 
-Smart contracts will be written in Solidity.
+Example:
 
-The development blockchain will be provided by Hardhat Network.
+```http
+POST /api/products/{productId}/supply-chain/events
+```
 
-The backend will communicate with deployed smart contracts through ethers.js.
+Example request:
+
+```json
+{
+  "event": "SHIPPED",
+  "location": "Warehouse-A"
+}
+```
+
+Possible events include:
 
 ```text
-Node.js / Express
-       |
-       | ethers.js
-       v
-Smart Contract
-       |
-       v
-Hardhat Network
+MANUFACTURED
+SHIPPED
+WAREHOUSE_RECEIVED
+DISTRIBUTOR_RECEIVED
+RETAILER_RECEIVED
 ```
 
-The prototype will not require real cryptocurrency.
+Supply-chain events shall be recorded as chronological entries in the MultiChain supply-chain stream.
 
-Hardhat provides a local development environment containing test accounts and test funds for transaction execution.
+The system shall allow businesses to retrieve the complete supply-chain history.
 
-These accounts are infrastructure used by the prototype and are not exposed as cryptocurrency wallets to the business users.
+Example:
+
+```http
+GET /api/products/{productId}/supply-chain/history
+```
 
 ---
 
-# 7. On-Chain and Off-Chain Data
+## FR-09 — MultiChain Permissions
 
-The system will use a hybrid data model.
+The system shall use MultiChain's permission system to control blockchain operations performed by participating businesses.
 
-Not all application data will be stored on the blockchain.
+Different businesses may have different blockchain permissions.
 
-## 7.1 Off-Chain Data
+For example:
 
-The conventional database will store application data such as:
+| Participant  | Example Responsibility                         |
+| ------------ | ---------------------------------------------- |
+| Manufacturer | Register products, record manufacturing events |
+| Warehouse    | Record warehouse events                        |
+| Distributor  | Record distribution events                     |
+| Retailer     | Record retail/receipt events                   |
 
-* Product names
-* Product descriptions
-* Prices
+The backend shall ensure that a business cannot perform blockchain operations for which its blockchain identity does not have permission.
+
+MultiChain supports global and per-stream permissions, including stream-level `write` permissions.
+
+---
+
+## FR-10 — Blockchain Transaction Tracking
+
+For every blockchain-backed operation, the system shall record the relevant MultiChain transaction ID.
+
+The PostgreSQL database shall maintain information such as:
+
+```text
+transaction_id
+operation
+product_id
+business_id
+status
+created_at
+```
+
+This allows the BaaS platform to associate application-level operations with their corresponding blockchain transactions.
+
+---
+
+## FR-11 — Blockchain Data Streams
+
+The system shall organize blockchain records using MultiChain data streams.
+
+The initial stream structure shall include:
+
+```text
+products
+ownership
+warranty
+supply_chain
+```
+
+Each stream will contain records relevant to its purpose.
+
+For example:
+
+```text
+products
+    └── P1001 → product registration
+
+ownership
+    ├── P1001 → Manufacturer
+    └── P1001 → Retailer
+
+warranty
+    └── P1001 → WARRANTY_ACTIVATED
+
+supply_chain
+    ├── P1001 → MANUFACTURED
+    ├── P1001 → SHIPPED
+    └── P1001 → RETAILER_RECEIVED
+```
+
+MultiChain streams provide an append-only structure in which items can contain JSON/text/binary data and metadata such as transaction IDs and block information.
+
+---
+
+## FR-12 — Blockchain Data Validation
+
+The system may use **MultiChain Smart Filters** where appropriate to enforce blockchain-level validation rules.
+
+Potential validation rules include:
+
+* Required fields must be present.
+* Invalid event types must be rejected.
+* Unauthorized publishers must not be accepted.
+* Invalid state transitions may be rejected.
+
+MultiChain Smart Filters are JavaScript-based rules that can validate transactions or stream items.
+
+Smart Filters are considered an enhancement to the core MVP and will only be implemented where they provide meaningful validation beyond the application layer.
+
+---
+
+# 5. Data Storage Requirements
+
+## 5.1 PostgreSQL
+
+PostgreSQL shall be used as the application's primary relational database.
+
+It shall store:
+
 * Business information
-* API credentials
-* Application metadata
-* Transaction hashes
-* Transaction status
-* Other data that does not require blockchain immutability
+* API credentials/credential metadata
+* Product metadata
+* Application-level relationships
+* Blockchain transaction records
+* Operation status
+* System/audit information
 
-## 7.2 On-Chain Data
+## 5.2 MultiChain
 
-The blockchain will store data for which immutability and independent verification provide value.
+MultiChain shall store blockchain-backed records that require a shared, append-only history.
 
-Examples include:
+It shall be used for:
 
-* Product registration
-* Product ownership
-* Ownership changes
-* Warranty records/events
+* Product registration records
+* Ownership events
+* Warranty events
 * Supply-chain events
+* Blockchain timestamps
+* Blockchain transaction history
 
-This separation reduces unnecessary blockchain storage and transaction usage while retaining blockchain functionality where it provides a meaningful benefit.
+The system shall avoid storing large or unnecessary application data directly on the blockchain.
 
 ---
 
-# 8. Functional Requirements
+# 6. Blockchain Architecture Requirements
 
-## FR-01: Business Authentication
+The blockchain architecture shall use a **permissioned MultiChain network**.
 
-The system shall authenticate registered businesses before allowing access to protected BaaS APIs.
-
-## FR-02: Product Registration
-
-The system shall allow an authenticated business to register a product.
-
-## FR-03: Blockchain Registration
-
-The system shall submit the relevant product registration information to the appropriate smart contract.
-
-## FR-04: Transaction Tracking
-
-The system shall record the blockchain transaction hash associated with a blockchain operation.
-
-## FR-05: Transaction Status
-
-The system shall provide the status of blockchain operations.
-
-Possible statuses may include:
+The conceptual architecture is:
 
 ```text
-PENDING
-CONFIRMED
-FAILED
+┌───────────────────────────────┐
+│     Existing Web2 Business    │
+└───────────────┬───────────────┘
+                │
+                │ REST API
+                ▼
+┌───────────────────────────────┐
+│          BaaS Backend         │
+│       Node.js + Express       │
+│                               │
+│  Authentication              │
+│  Business Services            │
+│  Blockchain Service           │
+└───────────────┬───────────────┘
+                │
+                │ JSON-RPC
+                ▼
+┌───────────────────────────────┐
+│       MultiChain Network      │
+│                               │
+│  Products Stream              │
+│  Ownership Stream             │
+│  Warranty Stream              │
+│  Supply Chain Stream          │
+│  Permissions                  │
+└───────────────────────────────┘
+
+                │
+                │
+                ▼
+┌───────────────────────────────┐
+│         PostgreSQL            │
+│                               │
+│ Application Data              │
+│ Transaction Records           │
+│ Business Data                 │
+└───────────────────────────────┘
 ```
 
-## FR-06: Product Verification
-
-The system shall allow an authenticated business to verify a product's blockchain registration.
-
-## FR-07: Ownership Transfer
-
-The system shall allow authorized operations to record product ownership transfers.
-
-## FR-08: Warranty Recording
-
-The system shall allow warranty information/events to be recorded for registered products.
-
-## FR-09: Supply-Chain Event Recording
-
-The system shall allow authorized businesses to record product lifecycle events.
-
-## FR-10: Transaction History
-
-The system shall allow relevant blockchain transaction information to be viewed through the BaaS platform.
-
-## FR-11: Dashboard
-
-The system shall provide a web dashboard for demonstrating and managing supported BaaS functionality.
+The backend shall communicate with MultiChain through its JSON-RPC interface rather than exposing MultiChain directly to Web2 businesses. MultiChain provides JSON-RPC commands for stream creation, publishing, querying, and permission management.
 
 ---
 
-# 9. Non-Functional Requirements
+# 7. API Requirements
 
-## NFR-01: Abstraction
+The BaaS API shall expose blockchain functionality through conventional REST endpoints.
 
-The system shall hide blockchain implementation details from API consumers.
+Initial API:
 
-A business should not need to understand Solidity, smart contracts, blockchain nodes, or blockchain transaction mechanisms to use the platform.
+```text
+POST   /api/products
 
-## NFR-02: Security
+GET    /api/products/:id
 
-Protected APIs shall require authentication.
+GET    /api/products/:id/verify
 
-Private keys used for blockchain transactions shall not be exposed to API consumers.
+POST   /api/products/:id/ownership
 
-## NFR-03: Reliability
+GET    /api/products/:id/ownership/history
 
-Blockchain failures shall be handled gracefully and should not cause the backend application to crash.
+POST   /api/products/:id/warranty
 
-## NFR-04: Maintainability
+GET    /api/products/:id/warranty
 
-The system shall separate API handling, business logic, database operations, and blockchain operations into distinct components.
+POST   /api/products/:id/supply-chain/events
 
-## NFR-05: Scalability
+GET    /api/products/:id/supply-chain/history
+```
 
-The architecture should allow additional blockchain services to be added without requiring major changes to existing API functionality.
+The API shall not require businesses to know:
 
-## NFR-06: Usability
+* MultiChain RPC commands
+* MultiChain stream names
+* Blockchain node addresses
+* Blockchain transaction construction
+* Blockchain permission-management commands
 
-The business-facing API shall use conventional HTTP/REST concepts and understandable request/response structures.
-
-## NFR-07: Testability
-
-Smart contracts, backend services, APIs, and major workflows should be independently testable.
-
----
-
-# 10. System Constraints
-
-The project is a four-person academic project with a limited implementation period.
-
-Therefore, the MVP will prioritize demonstrating the BaaS concept over implementing production-scale infrastructure.
-
-The project will use:
-
-* Local blockchain infrastructure
-* Test blockchain accounts
-* Simulated business clients
-* Limited blockchain services
-* A simplified authentication system
-
-The system will not attempt to provide production-level blockchain infrastructure comparable to commercial cloud BaaS providers.
+This abstraction is a core requirement of the BaaS architecture.
 
 ---
 
-# 11. Out of Scope
+# 8. Non-Functional Requirements
 
-The following features are not part of the core MVP.
+## NFR-01 — Abstraction
 
-### Cryptocurrency Payments
+The blockchain implementation shall be hidden behind the BaaS API.
 
-The platform will not implement cryptocurrency payments.
+A Web2 business should be able to use the platform without directly interacting with MultiChain.
 
-### Customer Crypto Wallets
+## NFR-02 — Security
 
-Customers will not be required to own or connect cryptocurrency wallets.
+The system shall:
 
-### Real-Money Blockchain Transactions
+* Authenticate API requests.
+* Protect API credentials.
+* Associate blockchain operations with authorized businesses.
+* Enforce blockchain permissions.
+* Prevent unauthorized modification of application records.
 
-The prototype will not use real cryptocurrency or real financial transactions.
+## NFR-03 — Data Integrity
 
-### Public Blockchain Deployment
+Blockchain-backed records shall provide an append-only history for supported operations.
 
-The initial prototype will use a local development blockchain.
+Existing events such as ownership transfers and supply-chain events shall not simply be overwritten.
 
-### Decentralized Cryptocurrency Exchange
+## NFR-04 — Reliability
 
-Cryptocurrency trading or exchange functionality is outside the project scope.
+The system shall record the status and transaction ID of blockchain operations so that application-level records can be associated with blockchain transactions.
 
-### Full Production BaaS Infrastructure
+## NFR-05 — Maintainability
 
-The project will not attempt to provide:
+The backend shall separate:
 
-* Global blockchain node infrastructure
-* Multi-region deployment
-* Enterprise-scale monitoring
-* Production-grade key management
-* Commercial billing
-* High-availability infrastructure
+```text
+REST API
+    ↓
+Business Services
+    ↓
+Blockchain Service
+    ↓
+MultiChain
+```
+
+This separation shall allow the blockchain implementation to be changed without redesigning the public BaaS API.
+
+## NFR-06 — Usability
+
+The API shall use simple, predictable REST endpoints and JSON request/response formats.
+
+A developer familiar with conventional Web2 APIs should be able to use the platform without prior MultiChain knowledge.
 
 ---
 
-# 12. Optional Future Features
+# 9. Core System Flows
 
-The architecture may be extended in the future to support:
+## 9.1 Product Registration
 
-* Additional blockchain networks
-* Token-based product representations
-* Blockchain-based escrow
-* Cryptocurrency payments
-* External wallet integration
-* Multi-business blockchain isolation
-* Advanced analytics
-* Event indexing
-* Asynchronous blockchain job processing
-* Production blockchain deployment
+```text
+Web2 Business
+      │
+      │ POST /api/products
+      ▼
+BaaS API
+      │
+      ├── Authenticate Business
+      │
+      ├── Validate Product
+      │
+      ├── Store Product Metadata
+      │        ↓
+      │    PostgreSQL
+      │
+      └── Publish Blockchain Record
+               │
+               ▼
+          MultiChain
+               │
+          products stream
+               │
+               ▼
+        Transaction ID
+               │
+               ▼
+          BaaS Response
+```
+
+## 9.2 Product Verification
+
+```text
+Web2 Business
+      │
+      │ GET /api/products/P1001/verify
+      ▼
+BaaS API
+      │
+      ▼
+MultiChain
+      │
+      │ Query products stream
+      ▼
+Blockchain Record
+      │
+      ▼
+Verification Result
+```
+
+## 9.3 Ownership Transfer
+
+```text
+Business A
+    │
+    │ POST ownership transfer
+    ▼
+BaaS API
+    │
+    ├── Authenticate
+    ├── Check permission
+    └── Validate product
+             │
+             ▼
+        MultiChain
+             │
+      ownership stream
+             │
+             ▼
+       Transaction ID
+```
+
+## 9.4 Supply-Chain Tracking
+
+```text
+Manufacturer
+      │
+      ▼
+MANUFACTURED
+      │
+      ▼
+SHIPPED
+      │
+      ▼
+Warehouse
+      │
+      ▼
+WAREHOUSE_RECEIVED
+      │
+      ▼
+Distributor
+      │
+      ▼
+DISTRIBUTOR_RECEIVED
+      │
+      ▼
+Retailer
+      │
+      ▼
+RETAILER_RECEIVED
+```
+
+Each event is recorded as a separate blockchain event rather than modifying the previous event.
+
+---
+
+# 10. Technology Stack
+
+| Layer                          | Technology                     |
+| ------------------------------ | ------------------------------ |
+| Frontend                       | React + Javascript/TypeScript  |
+| Backend                        | Node.js + Express              |
+| Database                       | PostgreSQL                     |
+| Blockchain                     | MultiChain                     |
+| Blockchain Interface           | MultiChain JSON-RPC API        |
+| Blockchain Data Model          | MultiChain Data Streams        |
+| Blockchain Access Control      | MultiChain Permissions         |
+| Optional Blockchain Validation | MultiChain Smart Filters       |
+| API Testing                    | Postman                        |
+| Version Control                | Git + GitHub                   |
+
+---
+
+# 11. Project Constraints
+
+The project is an academic proof-of-concept and therefore prioritizes:
+
+* Demonstrating the BaaS architecture
+* Demonstrating real blockchain interaction
+* Demonstrating permissioned business participation
+* Demonstrating blockchain-backed product history
+* Maintaining a manageable implementation scope
+
+The project does not attempt to reproduce the infrastructure, scalability, availability, security, or operational capabilities of a commercial BaaS provider.
+
+---
+
+# 12. MVP Definition
+
+The MVP will be considered complete when the following end-to-end flow works:
+
+```text
+1. Register a business
+        ↓
+2. Authenticate using BaaS API
+        ↓
+3. Register a product
+        ↓
+4. BaaS publishes product record to MultiChain
+        ↓
+5. MultiChain returns transaction ID
+        ↓
+6. BaaS stores transaction information in PostgreSQL
+        ↓
+7. Business verifies the product
+        ↓
+8. Business transfers ownership
+        ↓
+9. BaaS records ownership event on MultiChain
+        ↓
+10. Business retrieves ownership history
+        ↓
+11. Business records warranty/supply-chain events
+        ↓
+12. Business retrieves blockchain-backed history
+```
+
+The MVP must demonstrate that an existing Web2 business can consume blockchain functionality through **simple REST APIs without directly managing the MultiChain blockchain**.
+
+---
+
+# 13. Future Enhancements
+
+Potential future features include:
+
+* Additional blockchain services
+* Advanced Smart Filter rules
+* More sophisticated business roles
+* Additional MultiChain nodes
+* Automated blockchain health monitoring
+* Webhooks for blockchain operation status
+* Rate limiting and API usage analytics
+* API usage billing
+* Enterprise-level stream privacy
+* Cloud deployment
+* High-availability blockchain infrastructure
+* Additional blockchain platforms through a pluggable blockchain-service layer
 
 These features are not required for the MVP.
-
----
-
-# 13. Core User Flows
-
-## Product Registration
-
-```text
-Business
-   |
-   | POST /products/register
-   v
-BaaS API
-   |
-   | Validate + authenticate
-   v
-Backend Service
-   |
-   +----> Database
-   |
-   +----> ethers.js
-              |
-              v
-        Smart Contract
-              |
-              v
-         Blockchain
-              |
-              v
-        Transaction Hash
-              |
-              v
-           Business
-```
-
-## Product Verification
-
-```text
-Business
-   |
-   | GET /products/{id}/verify
-   v
-BaaS API
-   |
-   v
-Blockchain Service
-   |
-   | ethers.js
-   v
-Smart Contract
-   |
-   v
-Blockchain
-   |
-   v
-Verification Result
-   |
-   v
-Business
-```
-
-## Ownership Transfer
-
-```text
-Business
-   |
-   | POST /products/{id}/transfer
-   v
-BaaS API
-   |
-   v
-Blockchain Service
-   |
-   v
-Smart Contract
-   |
-   v
-Blockchain
-   |
-   v
-Transaction Hash / Status
-```
-
----
-
-# 14. High-Level Architecture
-
-The proposed architecture consists of four major layers.
-
-```text
-┌─────────────────────────────────────┐
-│         Web2 Business / UI         │
-└─────────────────┬───────────────────┘
-                  │ REST API
-                  v
-┌─────────────────────────────────────┐
-│            BaaS Backend             │
-│          Node.js + Express          │
-│                                     │
-│ Authentication                      │
-│ API Controllers                     │
-│ Business Services                   │
-│ Blockchain Service                  │
-└──────────────┬───────────┬──────────┘
-               │           │
-               │           │ ethers.js
-               v           v
-        ┌────────────┐  ┌───────────────┐
-        │ PostgreSQL │  │ Smart Contract│
-        │ / Database │  │    Solidity   │
-        └────────────┘  └───────┬───────┘
-                                │
-                                v
-                       ┌─────────────────┐
-                       │ Hardhat Network │
-                       └─────────────────┘
-```
-
----
-
-# 15. Technology Stack
-
-| Layer                  | Technology           |
-| ---------------------- | -------------------- |
-| Frontend               | React                |
-| Backend                | Node.js + Express.js |
-| Database               | PostgreSQL           |
-| Smart Contracts        | Solidity             |
-| Blockchain Development | Hardhat              |
-| Blockchain Integration | ethers.js            |
-| API Testing            | Postman              |
-| Version Control        | Git + GitHub         |
-
-The final technology choices will be documented separately together with their alternatives, reasons for selection, and trade-offs.
-
----
-
-# 16. MVP Definition
-
-The MVP will be considered functional when the following workflow can be demonstrated:
-
-1. A simulated e-commerce business authenticates with the BaaS platform.
-2. The business sends a product registration request.
-3. The BaaS backend validates the request.
-4. The backend stores appropriate off-chain information.
-5. The backend invokes the Product Registry smart contract.
-6. The smart contract records the product on the local blockchain.
-7. The backend receives a transaction hash.
-8. The transaction status can be retrieved.
-9. The business can verify the product through another REST API.
-10. Ownership can be transferred.
-11. Warranty or supply-chain events can be recorded.
-12. The React dashboard can display the resulting information.
-
----
-
-# 17. Core Project Statement
-
-> We are building a Blockchain-as-a-Service platform that provides e-commerce businesses with simple APIs for blockchain-based services, acting as an abstraction layer that allows existing Web2 applications to adopt Web3 capabilities without having to build or manage their own blockchain infrastructure.
