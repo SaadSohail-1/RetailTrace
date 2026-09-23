@@ -613,6 +613,16 @@ Content-Type: application/json
 
 The business is determined from the API key.
 
+The `businessId` field in the product record represents the current owning
+business.
+
+When ownership is successfully transferred, `businessId` is updated to the
+new owner. The `businessId` field in the product record represents the current owning
+business.
+
+When ownership is successfully transferred, `businessId` is updated to the
+new owner.
+
 ## Success
 
 Status:
@@ -781,6 +791,11 @@ Content-Type: application/json
 | `newOwner` | string | Yes      |
 
 `newOwner` represents the destination business identity.
+
+After a successful ownership transfer, the product's `businessId`
+is updated to `newOwner`.
+
+The authenticated business must be the product's current owner.
 
 ## Success
 
