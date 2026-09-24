@@ -19,6 +19,15 @@ export type SupplyChainEventType =
     |    "DELIVERED";
 
 //products
+
+//http
+export interface RegisterProductRequest {
+    productId: string;
+    name: string;
+    description?: string | null;
+}
+
+//blockchain
 export interface RegisterProductBlockchainData {
     productId: string;
     businessId: string;
