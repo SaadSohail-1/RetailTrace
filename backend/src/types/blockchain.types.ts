@@ -15,6 +15,12 @@ export interface BlockchainRecord {
     data: Record<string, unknown>;
 }
 
+export interface RecordVerificationResult {
+    recordId: string;
+    verified: boolean;
+    transactionId: string | null;
+}
+
 export interface BlockchainService {
     publishRecord(
         record: BlockchainRecord
@@ -23,4 +29,8 @@ export interface BlockchainService {
     getRecord(
         recordId: string
     ): Promise<BlockchainRecord | null>;
+
+    verifyRecord(
+        recordId: string
+    ) : Promise<RecordVerificationResult>
 }
