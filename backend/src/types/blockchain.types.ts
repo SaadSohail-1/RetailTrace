@@ -21,6 +21,13 @@ export interface RecordVerificationResult {
     transactionId: string | null;
 }
 
+export interface BlockchainRecordHistoryItem {
+    record: BlockchainRecord;
+    transactionId: string;
+    blocktime: number;
+    confirmations: number;
+}
+
 export interface BlockchainService {
     publishRecord(
         record: BlockchainRecord
