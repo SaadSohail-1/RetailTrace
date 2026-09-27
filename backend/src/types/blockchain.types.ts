@@ -28,6 +28,10 @@ export interface BlockchainRecordHistoryItem {
     confirmations: number;
 }
 
+export interface BlockchainIdentity {
+    blockchainAddress: string;
+}
+
 export interface BlockchainService {
     publishRecord(
         record: BlockchainRecord
