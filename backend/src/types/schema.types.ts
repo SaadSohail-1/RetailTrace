@@ -11,7 +11,7 @@ export interface SchemaField {
 }
 
 export interface Schema {
-    id: string;
+    _id: string;
     businessId: string;
     name: string;
     version: number;
