@@ -5,7 +5,7 @@ export interface RecordData {
 }
 
 export interface Record {
-    id: string;
+    _id: string;
     businessId: string;
     schemaId: string;
     data: RecordData;
