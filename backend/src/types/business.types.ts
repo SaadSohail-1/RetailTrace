@@ -1,5 +1,5 @@
 export interface Business {
-    id: string;
+    _id: string;
     name: string;
     email: string;
     apiKeyHash: string;
