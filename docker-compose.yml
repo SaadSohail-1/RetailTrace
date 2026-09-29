@@ -1,0 +1,40 @@
+services:
+  mongodb:
+    image: mongo:8
+    container_name: retailtrace-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGODB_DATABASE:-retailtrace}
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --eval 'db.adminCommand({ ping: 1 }).ok' | grep 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: retailtrace-backend
+    restart: unless-stopped
+    ports:
+      - "${PORT:-5000}:5000"
+    environment:
+      PORT: 5000
+      MONGODB_URI: mongodb://mongodb:27017
+      MONGODB_DATABASE: ${MONGODB_DATABASE:-retailtrace}
+      MULTICHAIN_RPC_URL: ${MULTICHAIN_RPC_URL:-}
+      MULTICHAIN_RPC_USER: ${MULTICHAIN_RPC_USER:-}
+      MULTICHAIN_RPC_PASSWORD: ${MULTICHAIN_RPC_PASSWORD:-}
+      MULTICHAIN_CHAIN: ${MULTICHAIN_CHAIN:-retailtrace}
+      MULTICHAIN_ADDRESS: ${MULTICHAIN_ADDRESS:-}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+volumes:
+  mongodb_data:
