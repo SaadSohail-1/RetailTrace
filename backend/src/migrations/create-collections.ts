@@ -12,9 +12,10 @@ const validators: Record<string, Document> = {
     businesses: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["name", "email", "passwordHash", "apiKeyHash", "createdAt"],
+            required: ["name", "email", "passwordHash", "apiKeyHash", "createdAt", "updatedAt"],
             additionalProperties: false,
             properties: {
+                _id: { bsonType: "objectId" },
                 name: { bsonType: "string" },
                 email: { bsonType: "string" },
                 passwordHash: { bsonType: "string" },
@@ -30,6 +31,7 @@ const validators: Record<string, Document> = {
             required: ["businessId", "blockchainAddress", "createdAt", "updatedAt"],
             additionalProperties: false,
             properties: {
+                _id: { bsonType: "objectId" },
                 businessId: { bsonType: "string" },
                 blockchainAddress: { bsonType: "string" },
                 createdAt: { bsonType: "date" },
@@ -40,28 +42,30 @@ const validators: Record<string, Document> = {
     schemas: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["businessId", "name", "version", "fields", "schema", "createdAt"],
+            required: ["businessId", "name", "version", "fields", "schema", "createdAt", "updatedAt"],
             properties: {
                 businessId: { bsonType: "string" },
                 name: { bsonType: "string" },
                 version: { bsonType: "int", minimum: 1 },
                 fields: { bsonType: "array" },
                 schema: { bsonType: "object" },
-                createdAt: { bsonType: "date" }
+                createdAt: { bsonType: "date" },
+                updatedAt: { bsonType: "date" }
             }
         }
     },
     records: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["businessId", "schemaId", "data", "status", "createdAt"],
+            required: ["businessId", "schemaId", "data", "status", "createdAt", "updatedAt"],
             properties: {
                 businessId: { bsonType: "string" },
                 schemaId: { bsonType: "string" },
                 data: { bsonType: "object" },
                 transactionId: { bsonType: "string" },
                 status: { enum: ["PENDING", "CONFIRMED", "FAILED"] },
-                createdAt: { bsonType: "date" }
+                createdAt: { bsonType: "date" },
+                updatedAt: { bsonType: "date" }
             }
         }
     }
