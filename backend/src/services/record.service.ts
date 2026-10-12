@@ -1,4 +1,5 @@
 import { env } from "../config/env.js";
+import { isObjectIdOrHexString } from "mongoose";
 import {
     publishRecord,
     verifyRecord as verifyBlockchainRecord
@@ -20,7 +21,8 @@ export class RecordServiceError extends Error {
             | "SCHEMA_NOT_FOUND"
             | "INVALID_RECORD"
             | "RECORD_NOT_FOUND"
-            | "BLOCKCHAIN_NOT_CONFIGURED",
+            | "BLOCKCHAIN_NOT_CONFIGURED"
+            | "PROCESSING_FAILED",
         message: string,
         public readonly details?: unknown
     ) {
@@ -67,7 +69,10 @@ function validateInput(input: CreateRecordInput): void {
 }
 
 function validateRecordId(recordId: string): void {
-    if (typeof recordId !== "string" || recordId.trim().length === 0) {
+    if (
+        typeof recordId !== "string" ||
+        !isObjectIdOrHexString(recordId.trim())
+    ) {
         throw new RecordServiceError("INVALID_INPUT", "A valid recordId is required");
     }
 }
@@ -75,6 +80,13 @@ function validateRecordId(recordId: string): void {
 export class RecordService {
     async create(businessId: string, input: CreateRecordInput) {
         validateInput(input);
+
+        if (!env.MULTICHAIN_ADDRESS) {
+            throw new RecordServiceError(
+                "BLOCKCHAIN_NOT_CONFIGURED",
+                "Blockchain publishing address is not configured"
+            );
+        }
 
         const schema = await schemaRepository.findByIdAndBusinessId(
             input.schemaId.trim(),
@@ -90,13 +102,6 @@ export class RecordService {
                 "INVALID_RECORD",
                 "Record data failed schema validation",
                 validation.errors
-            );
-        }
-
-        if (!env.MULTICHAIN_ADDRESS) {
-            throw new RecordServiceError(
-                "BLOCKCHAIN_NOT_CONFIGURED",
-                "Blockchain publishing address is not configured"
             );
         }
 
@@ -129,8 +134,21 @@ export class RecordService {
                 status: blockchainResult.status
             });
         } catch (error) {
-            await recordRepository.deleteById(recordId);
-            throw error;
+            try {
+                await recordRepository.deleteById(recordId);
+            } catch (rollbackError) {
+                throw new RecordServiceError(
+                    "PROCESSING_FAILED",
+                    "Record processing failed and its database rollback could not be completed",
+                    rollbackError
+                );
+            }
+
+            throw new RecordServiceError(
+                "PROCESSING_FAILED",
+                "Record could not be published and was not stored",
+                error
+            );
         }
     }
 

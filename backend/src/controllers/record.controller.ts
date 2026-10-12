@@ -33,6 +33,8 @@ function handleError(response: Response, error: unknown) {
             ? 404
             : error.code === "BLOCKCHAIN_NOT_CONFIGURED"
                 ? 500
+                : error.code === "PROCESSING_FAILED"
+                    ? 502
                 : error.code === "INVALID_INPUT" || error.code === "INVALID_RECORD"
                     ? 400
                     : 500;
